@@ -4,22 +4,27 @@ using UnityEngine.AI;
 public class UnitMovement : MonoBehaviour
 {
     private NavMeshAgent agent;
+    public bool isSelected = false;
+    public GameObject selectionCircle;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        if (selectionCircle != null)
+            selectionCircle.SetActive(false);
     }
 
-    void Update()
+    public void MoveTo(Vector3 destination)
     {
-        if (Input.GetMouseButtonDown(1)) // Right-click
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        agent.SetDestination(destination);
+    }
 
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                agent.SetDestination(hit.point);
-            }
-        }
+    public void SetSelected(bool value)
+    {
+        isSelected = value;
+
+        if (selectionCircle != null)
+            selectionCircle.SetActive(value);
     }
 }
