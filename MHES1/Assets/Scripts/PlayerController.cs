@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
     private float _horizontalInput;
     private float _verticalInput;
     private float _mouseScrollInput;
-    private float _speed = 5;
+    private float _speed = 20;
 
     void Update()
     {
@@ -15,6 +15,6 @@ public class PlayerController : MonoBehaviour
 
         transform.Translate(Vector3.up * _verticalInput * Time.deltaTime * _speed);
         transform.Translate(Vector3.right * _horizontalInput * Time.deltaTime * _speed);
-        transform.Translate(Vector3.forward * _mouseScrollInput * Time.deltaTime * _speed * 50 * transform.position.y);
+        transform.Translate(Vector3.forward * _mouseScrollInput * Time.deltaTime * _speed * 20 * transform.position.y);
     }
 }
