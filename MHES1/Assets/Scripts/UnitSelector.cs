@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterSelector : MonoBehaviour
+public class UnitSelector : MonoBehaviour
 {
     private UnitMovement selectedUnit;
 

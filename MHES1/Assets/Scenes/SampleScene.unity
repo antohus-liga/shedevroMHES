@@ -637,6 +637,7 @@ GameObject:
   - component: {fileID: 1035311610}
   - component: {fileID: 1035311614}
   - component: {fileID: 1035311615}
+  - component: {fileID: 1035311616}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -748,7 +749,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10065112c1d9fd74e98a37f518e1e040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSelected: 0
   selectionCircle: {fileID: 343508263}
 --- !u!195 &1035311615
 NavMeshAgent:
@@ -760,7 +760,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 0
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -772,6 +772,24 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1035311616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035311609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4db9209b82148548b610c689c52ec86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats:
+    maxHealth: 0
+    currentHealth: 0
+    attack: 0
+    defense: 0
+    moveSpeed: 5
 --- !u!1 &1102255605
 GameObject:
   m_ObjectHideFlags: 0

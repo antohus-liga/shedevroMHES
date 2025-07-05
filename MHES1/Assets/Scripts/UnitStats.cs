@@ -1,19 +1,9 @@
-using UnityEngine;
-
-public class UnitStats : MonoBehaviour
+[System.Serializable]
+public struct UnitStats
 {
-    public float health = 100;
-    public float speed = 5;
-    public float damage = 3;
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public int maxHealth;
+    public int currentHealth;
+    public int attack;
+    public int defense;
+    public float moveSpeed;
 }
