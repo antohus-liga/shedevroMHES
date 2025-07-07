@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UnitSelector : MonoBehaviour
 {
-    private UnitMovement selectedUnit;
+    private Unit selectedUnit;
 
     void Update()
     {
@@ -12,7 +12,7 @@ public class UnitSelector : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                UnitMovement unit = hit.collider.GetComponent<UnitMovement>();
+                Unit unit = hit.collider.GetComponent<Unit>();
 
                 if (unit != null)
                 {

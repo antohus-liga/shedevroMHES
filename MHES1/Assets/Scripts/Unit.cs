@@ -1,24 +1,23 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
-public class UnitMovement : MonoBehaviour
+public class Unit : MonoBehaviour
 {
+    public UnitStats stats;
     [SerializeField] private GameObject selectionCircle;
 
     private NavMeshAgent agent;
-    private UnitStatsComponent unitStats;
     private bool isSelected = false;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        unitStats = GetComponent<UnitStatsComponent>();
-
-        agent.speed = unitStats.stats.moveSpeed;
+        stats.currentHealth = stats.maxHealth;
 
         if (selectionCircle != null)
             selectionCircle.SetActive(false);
+
+        agent.speed = stats.moveSpeed;
     }
 
     public void MoveTo(Vector3 destination)

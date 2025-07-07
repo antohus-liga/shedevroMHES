@@ -635,7 +635,6 @@ GameObject:
   - component: {fileID: 1035311612}
   - component: {fileID: 1035311611}
   - component: {fileID: 1035311610}
-  - component: {fileID: 1035311614}
   - component: {fileID: 1035311615}
   - component: {fileID: 1035311616}
   m_Layer: 0
@@ -737,19 +736,6 @@ Transform:
   - {fileID: 343508264}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1035311614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1035311609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10065112c1d9fd74e98a37f518e1e040, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectionCircle: {fileID: 343508263}
 --- !u!195 &1035311615
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -781,15 +767,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1035311609}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4db9209b82148548b610c689c52ec86, type: 3}
+  m_Script: {fileID: 11500000, guid: f6aa1d160bba164449ea32196131ae9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-    maxHealth: 0
+    maxHealth: 100
     currentHealth: 0
     attack: 0
     defense: 0
     moveSpeed: 5
+  selectionCircle: {fileID: 343508263}
 --- !u!1 &1102255605
 GameObject:
   m_ObjectHideFlags: 0
