@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class UnitSelector : MonoBehaviour
 {
-    private Unit selectedUnit;
+    public Unit selectedUnit;
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Left-click
+        // Left-click to select unit
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -16,45 +17,35 @@ public class UnitSelector : MonoBehaviour
 
                 if (unit != null)
                 {
-                    // Deselect current unit (if different)
+                    // Deselect previously selected unit
                     if (selectedUnit != null && selectedUnit != unit)
                         selectedUnit.SetSelected(false);
 
-                    // Select new unit
                     selectedUnit = unit;
                     selectedUnit.SetSelected(true);
                 }
                 else
                 {
-                    // Clicked something else — deselect
-                    DeselectCurrent();
+                    // Clicked on non-unit: deselect
+                    if (selectedUnit != null)
+                    {
+                        selectedUnit.SetSelected(false);
+                        selectedUnit = null;
+                    }
                 }
-            }
-            else
-            {
-                // Clicked empty space — deselect
-                DeselectCurrent();
             }
         }
 
-        // Right-click to move
         if (Input.GetMouseButtonDown(1) && selectedUnit != null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                selectedUnit.MoveTo(hit.point);
+                Tile tile = hit.collider.GetComponent<Tile>();
+                if (tile != null)
+                    selectedUnit.MoveTo(tile);
             }
-        }
-    }
-
-    void DeselectCurrent()
-    {
-        if (selectedUnit != null)
-        {
-            selectedUnit.SetSelected(false);
-            selectedUnit = null;
         }
     }
 }

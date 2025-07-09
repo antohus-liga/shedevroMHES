@@ -3,26 +3,40 @@ using UnityEngine.AI;
 
 public class Unit : MonoBehaviour
 {
-    public UnitStats stats;
     [SerializeField] private GameObject selectionCircle;
-
-    private NavMeshAgent agent;
+    public UnitStats stats;
+    public float moveSpeed = 5f;
     private bool isSelected = false;
+    private Vector3 targetPosition;
+    private bool isMoving = false;
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        targetPosition = transform.position;
         stats.currentHealth = stats.maxHealth;
 
         if (selectionCircle != null)
             selectionCircle.SetActive(false);
-
-        agent.speed = stats.moveSpeed;
     }
 
-    public void MoveTo(Vector3 destination)
+    void Update()
     {
-        agent.SetDestination(destination);
+        if (isMoving)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
+                isMoving = false;
+        }
+    }
+
+    public void MoveTo(Tile tile)
+    {
+        if (tile == null) return;
+
+        targetPosition = tile.transform.position;
+        targetPosition.y = 1;
+        isMoving = true;
     }
 
     public void SetSelected(bool value)
