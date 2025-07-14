@@ -25,6 +25,12 @@ public class GridManager : MonoBehaviour
         return tile;
     }
 
+    public Tile GetTileFromWorldPosition(Vector3 worldPos)
+    {
+        Vector2Int coords = new Vector2Int(Mathf.RoundToInt(worldPos.x), Mathf.RoundToInt(worldPos.z));
+        return GetTileAt(coords);
+    }
+
     public Tile GetTileAtWorldPosition(Vector3 worldPos)
     {
         Tile closest = null;
@@ -41,5 +47,28 @@ public class GridManager : MonoBehaviour
         }
 
         return closest;
+    }
+
+    public List<Tile> GetNeighbours(Tile tile)
+    {
+        List<Tile> neighbours = new List<Tile>();
+
+        Vector2Int[] directions = new Vector2Int[]
+        {
+            new Vector2Int(0, 1),
+            new Vector2Int(1, 0),
+            new Vector2Int(0, -1),
+            new Vector2Int(-1, 0),
+        };
+
+        foreach (var dir in directions)
+        {
+            Vector2Int checkPos = Vector2Int.RoundToInt(tile.GridCoordinates + dir);
+            Tile neighbour = GetTileAt(checkPos);
+            if (neighbour != null)
+                neighbours.Add(neighbour);
+        }
+
+        return neighbours;
     }
 }

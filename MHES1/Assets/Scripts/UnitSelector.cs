@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class UnitSelector : MonoBehaviour
 {
@@ -43,8 +44,12 @@ public class UnitSelector : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Tile tile = hit.collider.GetComponent<Tile>();
-                if (tile != null)
-                    selectedUnit.MoveTo(tile);
+                if (tile != null && selectedUnit != null)
+                {
+                    List<Tile> path = Pathfinding.Instance.FindPath(selectedUnit.currentTile, tile);
+                    if (path != null)
+                        selectedUnit.MoveAlongPath(path);
+                }
             }
         }
     }
