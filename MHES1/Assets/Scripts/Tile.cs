@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public Vector2 GridCoordinates = new Vector2(0f, 0f);
-    public Unit OccupiedUnit { get; private set; }
+    public Vector2Int GridCoordinates = new Vector2Int(0, 0);
+    public Unit OccupierUnit { get; private set; }
     public int GCost;
     public int HCost;
     public int FCost => GCost + HCost;
@@ -16,17 +16,17 @@ public class Tile : MonoBehaviour
 
     public bool IsOccupied()
     {
-        return OccupiedUnit != null;
+        return OccupierUnit != null;
     }
 
     public void SetOccupiedUnit(Unit unit)
     {
-        OccupiedUnit = unit;
+        OccupierUnit = unit;
     }
 
     public void ClearOccupiedUnit()
     {
-        OccupiedUnit = null;
+        OccupierUnit = null;
     }
 
     void OnDrawGizmos()

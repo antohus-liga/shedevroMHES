@@ -5,6 +5,8 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     [SerializeField] private GameObject selectionCircle;
+
+    public int ownerPlayerID;
     public UnitStats stats;
     public Tile currentTile;
 
@@ -17,6 +19,7 @@ public class Unit : MonoBehaviour
 
     void Start()
     {
+
         currentTile = GridManager.Instance.GetTileFromWorldPosition(transform.position);
 
         if (currentTile != null)
@@ -36,6 +39,17 @@ public class Unit : MonoBehaviour
 
         if (selectionCircle != null)
             selectionCircle.SetActive(false);
+
+        Renderer r = GetComponentInChildren<Renderer>();
+        switch (ownerPlayerID)
+        {
+            case 0:
+                r.material.color = Color.red;
+                break;
+            case 1:
+                r.material.color = Color.blue;
+                break;
+        }
     }
 
     void Update()
@@ -79,12 +93,15 @@ public class Unit : MonoBehaviour
             reservedTile = null;
         }
 
+        Tile finalTile;
         // Reserve the destination tile
-        Tile finalTile = path[^1];
-        if (finalTile.IsOccupied())
+        if (path.Count > 0)
         {
-            Debug.LogWarning("Target tile is already occupied!");
-            yield break;
+            finalTile = path[^1];
+        }
+        else
+        {
+            finalTile = currentTile;
         }
 
         finalTile.SetOccupiedUnit(this);
@@ -114,5 +131,45 @@ public class Unit : MonoBehaviour
         // Arrived at final destination, so reservation is fulfilled
         reservedTile = null;
         movementCoroutine = null;
+    }
+
+    private bool IsEnemyTo(Unit other)
+    {
+        return ownerPlayerID != other.ownerPlayerID;
+    }
+
+    public bool IsAdjacentTo(Unit other)
+    {
+        Vector2Int myPos = currentTile.GridCoordinates;
+        Vector2Int otherPos = other.currentTile.GridCoordinates;
+
+        return Mathf.Abs(myPos.x - otherPos.x) + Mathf.Abs(myPos.y - otherPos.y) == 1;
+    }
+
+    private void AttackEnemyUnit(Unit enemy)
+    {
+        enemy.stats.currentHealth -= Mathf.RoundToInt(stats.damage - stats.damage * enemy.stats.defense * 0.3f);
+
+        if (enemy.stats.currentHealth < 0)
+        {
+            enemy.currentTile.ClearOccupiedUnit();
+            Destroy(enemy.gameObject);
+        }
+    }
+
+    public void TryAttack(Unit target)
+    {
+        if (target == null) return;
+
+        if (IsEnemyTo(target) && IsAdjacentTo(target))
+        {
+            Debug.Log($"{gameObject.name} attacks {target.name}!");
+
+            AttackEnemyUnit(target); // Example method
+        }
+        else
+        {
+            Debug.Log("Target is out of range or not an enemy.");
+        }
     }
 }

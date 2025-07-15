@@ -40,12 +40,18 @@ public class UnitSelector : MonoBehaviour
         if (Input.GetMouseButtonDown(1) && selectedUnit != null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            int unitLayer = LayerMask.GetMask("Units");
+            int tileLayer = ~unitLayer; // Invert the mask to hit everything *except* units
 
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, tileLayer))
             {
                 Tile tile = hit.collider.GetComponent<Tile>();
                 if (tile != null && selectedUnit != null)
                 {
+                    if (tile.IsOccupied())
+                    {
+                        selectedUnit.TryAttack(tile.OccupierUnit);
+                    }
                     List<Tile> path = Pathfinding.Instance.FindPath(selectedUnit.currentTile, tile);
                     if (path != null)
                         selectedUnit.MoveAlongPath(path);

@@ -73,8 +73,8 @@ public class Pathfinding : MonoBehaviour
 
     private int GetDistance(Tile a, Tile b)
     {
-        int dstX = Mathf.Abs((int)(a.GridCoordinates.x - b.GridCoordinates.x));
-        int dstY = Mathf.Abs((int)(a.GridCoordinates.y - b.GridCoordinates.y));
+        int dstX = Mathf.Abs(a.GridCoordinates.x - b.GridCoordinates.x);
+        int dstY = Mathf.Abs(a.GridCoordinates.y - b.GridCoordinates.y);
         return dstX + dstY;
     }
 }

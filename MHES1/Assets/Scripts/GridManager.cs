@@ -27,7 +27,7 @@ public class GridManager : MonoBehaviour
 
     public Tile GetTileFromWorldPosition(Vector3 worldPos)
     {
-        Vector2Int coords = new Vector2Int(Mathf.RoundToInt(worldPos.x), Mathf.RoundToInt(worldPos.z));
+        Vector2Int coords = new Vector2Int((Mathf.RoundToInt(worldPos.x) - 2) / 2, (Mathf.RoundToInt(worldPos.z) - 2) / 2);
         return GetTileAt(coords);
     }
 
