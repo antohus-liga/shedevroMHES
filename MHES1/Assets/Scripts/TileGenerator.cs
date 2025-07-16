@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class TileGenerator : EditorWindow
 {
+    float tempScale = 0.05f;
+    float moistScale = 0.05f;
+    float elevScale = 0.08f;
     GameObject tile;
     Vector2Int size = new Vector2Int(5, 5);
 
@@ -27,7 +30,7 @@ public class TileGenerator : EditorWindow
             GenerateGrid();
         }
     }
-    
+
     Vector2 TileSize()
     {
         Bounds b = tile.GetComponent<MeshFilter>().sharedMesh.bounds;
@@ -43,7 +46,7 @@ public class TileGenerator : EditorWindow
         Vector3 position = Vector3.zero;
         GameObject parent = new GameObject("Tiles");
         Vector2 tileSize = TileSize();
-        
+
         for (int x = 0; x < size.x; x++)
         {
             position.x += tileSize.x;
@@ -58,9 +61,60 @@ public class TileGenerator : EditorWindow
         }
     }
 
+    // void CreateTile(Vector3 pos, Vector2Int id, Transform parent)
+    // {
+    //     GameObject newTile = Instantiate(tile, pos, Quaternion.identity, parent.transform);
+    //     newTile.GetComponent<Tile>().GridCoordinates = id;
+    // }
+    TerrainType GetBiome(float temperature, float moisture, float elevation)
+    {
+        if (elevation < 0.3f)
+            return TerrainType.Water;
+        if (elevation > 0.8f)
+            return TerrainType.Mountain;
+
+        if (temperature < 0.3f)
+        {
+            if (moisture < 0.3f) return TerrainType.Tundra;
+            else if (moisture < 0.6f) return TerrainType.Taiga;
+            else return TerrainType.SnowForest;
+        }
+        else if (temperature < 0.6f)
+        {
+            if (moisture < 0.3f) return TerrainType.Plains;
+            else if (moisture < 0.6f) return TerrainType.Forest;
+            else return TerrainType.Swamp;
+        }
+        else
+        {
+            if (moisture < 0.3f) return TerrainType.Desert;
+            else if (moisture < 0.6f) return TerrainType.Savanna;
+            else return TerrainType.Rainforest;
+        }
+    }
+    
     void CreateTile(Vector3 pos, Vector2Int id, Transform parent)
     {
-        GameObject newTile = Instantiate(tile, pos, Quaternion.identity, parent.transform);
-        newTile.GetComponent<Tile>().GridCoordinates = id;
+        float nx = (float)id.x / size.x;
+        float ny = (float)id.y / size.y;
+
+        float temperature = Mathf.PerlinNoise(nx / tempScale, ny / tempScale);
+        float moisture = Mathf.PerlinNoise((nx + 100) / moistScale, (ny + 100) / moistScale);
+        float elevation = Mathf.PerlinNoise((nx + 200) / elevScale, (ny + 200) / elevScale);
+
+        TerrainType biome = GetBiome(temperature, moisture, elevation);
+
+        GameObject newTile = Instantiate(tile, pos, Quaternion.identity, parent);
+        
+        Tile tileComponent = newTile.GetComponent<Tile>();
+        tileComponent.GridCoordinates = id;
+        tileComponent.Temperature = temperature;
+        tileComponent.Moisture = moisture;
+        tileComponent.Elevation = elevation;
+        tileComponent.Terrain = biome;
+
+        #if UNITY_EDITOR
+            UnityEditor.Undo.RegisterCreatedObjectUndo(newTile, "Create Tile");
+        #endif
     }
 }

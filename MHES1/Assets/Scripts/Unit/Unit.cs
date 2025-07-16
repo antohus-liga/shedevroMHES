@@ -43,12 +43,8 @@ public class Unit : MonoBehaviour
         Renderer r = GetComponentInChildren<Renderer>();
         switch (ownerPlayerID)
         {
-            case 0:
-                r.material.color = Color.red;
-                break;
-            case 1:
-                r.material.color = Color.blue;
-                break;
+            case 0: r.material.color = Color.red; break;
+            case 1: r.material.color = Color.blue; break;
         }
     }
 

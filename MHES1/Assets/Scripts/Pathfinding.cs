@@ -37,7 +37,7 @@ public class Pathfinding : MonoBehaviour
 
             foreach (Tile neighbour in GridManager.Instance.GetNeighbours(current))
             {
-                if (neighbour.IsOccupied() || closedSet.Contains(neighbour))
+                if (neighbour.IsOccupied() || closedSet.Contains(neighbour) || !neighbour.isWalkable)
                     continue;
 
                 int newGCost = current.GCost + GetDistance(current, neighbour);
