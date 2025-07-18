@@ -12,6 +12,6 @@ public class PlayerController : MonoBehaviour
 
         transform.Translate(Vector3.up * verticalInput * Time.deltaTime * _speed);
         transform.Translate(Vector3.right * horizontalInput * Time.deltaTime * _speed);
-        transform.Translate(Vector3.forward * mouseScrollInput * Time.deltaTime * _speed * 30);
+        transform.Translate(Vector3.forward * mouseScrollInput * Time.deltaTime * _speed * 80);
     }
 }

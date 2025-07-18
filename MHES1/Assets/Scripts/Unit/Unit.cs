@@ -15,7 +15,6 @@ public class Unit : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoving = false;
     private Coroutine movementCoroutine;
-    private Tile reservedTile = null;
 
     void Start()
     {
@@ -27,7 +26,7 @@ public class Unit : MonoBehaviour
             currentTile.SetOccupiedUnit(this);
 
             Vector3 tilePos = currentTile.transform.position;
-            transform.position = new Vector3(tilePos.x, tilePos.y + 1f, tilePos.z);
+            transform.position = new Vector3(tilePos.x, tilePos.y + 1.5f, tilePos.z);
         }
         else
         {
@@ -69,46 +68,22 @@ public class Unit : MonoBehaviour
 
     public void MoveAlongPath(List<Tile> path)
     {
-        // Stop any movement in progress
         if (movementCoroutine != null)
-        {
             StopCoroutine(movementCoroutine);
-            movementCoroutine = null;
-        }
 
-        // Start new movement
         movementCoroutine = StartCoroutine(MoveStepByStep(path));
     }
 
     private IEnumerator MoveStepByStep(List<Tile> path)
     {
-        // Cancel previous reservation if any
-        if (reservedTile != null && reservedTile != currentTile)
+        for (int i = 0; i < path.Count; i++)
         {
-            reservedTile.ClearOccupiedUnit();
-            reservedTile = null;
-        }
+            Tile nextTile = path[i];
 
-        Tile finalTile;
-        // Reserve the destination tile
-        if (path.Count > 0)
-        {
-            finalTile = path[^1];
-        }
-        else
-        {
-            finalTile = currentTile;
-        }
+            Vector3 targetPos = nextTile.transform.position;
+            targetPos.y = 1.5f;
 
-        finalTile.SetOccupiedUnit(this);
-        reservedTile = finalTile;
-
-        // Move through the path
-        foreach (Tile tile in path)
-        {
-            Vector3 targetPos = tile.transform.position;
-            targetPos.y = 1f;
-
+            // Move toward the tile
             while (Vector3.Distance(transform.position, targetPos) > 0.01f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
@@ -117,15 +92,14 @@ public class Unit : MonoBehaviour
 
             transform.position = targetPos;
 
-            // Update current tile only after arrival
-            if (currentTile != null)
+            // Only after arriving: update occupancy
+            if (currentTile != null && currentTile != nextTile)
                 currentTile.ClearOccupiedUnit();
 
-            currentTile = tile;
+            currentTile = nextTile;
+            currentTile.SetOccupiedUnit(this);
         }
 
-        // Arrived at final destination, so reservation is fulfilled
-        reservedTile = null;
         movementCoroutine = null;
     }
 

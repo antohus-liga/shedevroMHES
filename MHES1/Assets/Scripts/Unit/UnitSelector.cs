@@ -4,36 +4,47 @@ using System.Collections.Generic;
 public class UnitSelector : MonoBehaviour
 {
     public Unit selectedUnit;
+    [SerializeField] private LayerMask unitLayer;
+    [SerializeField] private UnitInfoUI infoUI;
+
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TurnManager.Instance.NextTurn();
+        }
+
         // Left-click to select unit
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, unitLayer))
             {
-                Unit unit = hit.collider.GetComponent<Unit>();
-
-                if (unit != null)
+                Unit clickedUnit = hit.collider.GetComponent<Unit>();
+                if (clickedUnit != null)
                 {
-                    // Deselect previously selected unit
-                    if (selectedUnit != null && selectedUnit != unit)
-                        selectedUnit.SetSelected(false);
-
-                    selectedUnit = unit;
-                    selectedUnit.SetSelected(true);
-                }
-                else
-                {
-                    // Clicked on non-unit: deselect
+                    // Deselect previous
                     if (selectedUnit != null)
-                    {
                         selectedUnit.SetSelected(false);
-                        selectedUnit = null;
-                    }
+
+                    selectedUnit = clickedUnit;
+                    selectedUnit.SetSelected(true);
+
+                    // Show info regardless of ownership
+                    infoUI.Show(clickedUnit);
                 }
+            }
+            else
+            {
+                // Clicked empty space
+                if (selectedUnit != null)
+                {
+                    selectedUnit.SetSelected(false);
+                    selectedUnit = null;
+                }
+                infoUI.Hide();
             }
         }
 
@@ -52,11 +63,19 @@ public class UnitSelector : MonoBehaviour
                     {
                         selectedUnit.TryAttack(tile.OccupierUnit);
                     }
-                    List<Tile> path = Pathfinding.Instance.FindPath(selectedUnit.currentTile, tile);
-                    if (path != null)
-                        selectedUnit.MoveAlongPath(path);
+                    else
+                    {
+                        List<Tile> path = Pathfinding.Instance.FindPath(selectedUnit.currentTile, tile);
+                        if (path != null && IsSelectedUnitMine())
+                            selectedUnit.MoveAlongPath(path);
+                    }
                 }
             }
         }
+
+    }
+    public bool IsSelectedUnitMine()
+    {
+        return selectedUnit != null && TurnManager.Instance.IsCurrentPlayersTurn(selectedUnit.ownerPlayerID);
     }
 }
